@@ -13,6 +13,8 @@ int sockfd = -1;																// file descriptor for our socket
 	char buffer[256];															// char array to store data going to and coming from the server
     struct sockaddr_in serverAddressInfo;						// Super-special secret C struct that holds address info for building our socket
     struct hostent *serverIPAddress;		
+	int h_errno;
+	
 
 
 void error(char *msg)
@@ -26,85 +28,50 @@ int main(int argc, char *argv[])
 	
 	
 	
-	
-	int netserverinit(char * hostname)
+
+	int netserverinit(char * hostname, int filemode)
 	{
 		
-		
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		int sockfd;
+		sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	struct hostent *server;
     struct sockaddr_in sin;
     sin.sin_family = AF_INET;
     sin.sin_port   = htons(62135);  // Could be anything
     inet_pton(AF_INET, hostname, &sin.sin_addr);
+		
 	
-	 serverIPAddress = gethostbyname(hostname);
+	
+	serverIPAddress = gethostbyname(hostname);
+	 if (sockfd < 0 || sockfd > 0) 
+		 {
+	 
     if (serverIPAddress == NULL)
 	{
-        fprintf(stderr,"ERROR, no such host\n");
+      //  fprintf(stderr,"ERROR, no such host\n");
+	  //gotta use errno thing
+		h_errno = HOST_NOT_FOUND;
+		printf("%s\n",  hstrerror(h_errno));
         return -1;
 	}
-    bzero((char *) &serverAddressInfo, sizeof(serverAddressInfo));
+	
+	 }
+	 
+	if (connect(sockfd,(struct sockaddr *)&serverAddressInfo,sizeof(serverAddressInfo)) == 0) 
+	{
+       // error("success");
+		return 0;
+		
+	}
+		 bzero((char *) &serverAddressInfo, sizeof(serverAddressInfo));
 	serverAddressInfo.sin_family = AF_INET;
 	serverAddressInfo.sin_port = htons(portno);
 	bcopy((char *)serverIPAddress->h_addr, (char *)&serverAddressInfo.sin_addr.s_addr, serverIPAddress->h_length);
+    
 	
-	if (connect(sockfd,(struct sockaddr *)&serverAddressInfo,sizeof(serverAddressInfo)) < 0) 
-	{
-        error("success");
-		return 0;
-	}
+	
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// Declare initial vars
     							// Super-special secret C struct that holds info about a machine's address
     

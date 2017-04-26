@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 		
 	
 	
-	serverIPAddress = gethostbyname(hostname);
+	serverIPAddress = gethostbyname([argv1]);
 	 if (sockfd < 0 || sockfd > 0) 
 		 {
 	 
